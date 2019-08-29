@@ -43,12 +43,8 @@ EOM
 echo -e "${MSG}"
 
 touch ${LOG_FILE}
-#
-# journalctl -u ${MINTER_SERVICE_NAME}  -n 100
-# sudo systemctl status  ${MINTER_SERVICE_NAME}
-# sudo systemctl start  ${MINTER_SERVICE_NAME}
-# sudo systemctl restart  ${MINTER_SERVICE_NAME}
 
+#
 sudo systemctl stop  ${MINTER_SERVICE_NAME} &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Stop Minter service. ${RESULT}"
@@ -78,16 +74,20 @@ RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Latest (${MINTER_LATEST_V}) release got. ${RESULT}"
 
 
-# Lock sensitive files
-test -f ${MINTER_HOME}/minter  && sudo chattr +i ${MINTER_HOME}/minter
-
-# test -f ${MINTER_HOME}/${RELIZE_FILE_ZIP} && rm -f ${MINTER_HOME}/${RELIZE_FILE_ZIP} &>>${LOG_FILE}
-
-
 #
 sudo systemctl start  ${MINTER_SERVICE_NAME}  &>>${LOG_FILE} &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Start Minter service. ${RESULT}"
+
+# Run after start service , after binary create new file struct
+# Lock sensitive files
+test -f ${MINTER_HOME}/minter  && sudo chattr +i ${MINTER_HOME}/minter
+test -f ${MINTER_HOME}/.minter/config/config.toml  && sudo chattr +i ${MINTER_HOME}/.minter/config/config.toml
+test -f ${MINTER_HOME}/.minter/config/genesis.json  && sudo chattr +i ${MINTER_HOME}/.minter/config/genesis.json
+test -f ${MINTER_HOME}/.minter/config/node_key.json  && sudo chattr +i ${MINTER_HOME}/.minter/config/node_key.json
+test -f ${MINTER_HOME}/.minter/config/priv_validator.json  && sudo chattr +i ${MINTER_HOME}/.minter/config/priv_validator.json
+
+# test -f ${MINTER_HOME}/${RELIZE_FILE_ZIP} && rm -f ${MINTER_HOME}/${RELIZE_FILE_ZIP} &>>${LOG_FILE}
 
 #Halth check
 #curl http://127.0.0.1:8841/api/status | json_pp &>> ${LOG_FILE}

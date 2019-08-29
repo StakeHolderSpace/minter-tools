@@ -114,17 +114,19 @@ tar -xzf  ${MINTER_HOME}/${DT_STAMP}_minter_bcp.tar.gz -C / &>>${LOG_FILE} &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Restore Minter configs. ${RESULT}"
 
-# Lock sensitive files
-test -f ${MINTER_HOME}/.minter/config/config.toml  && sudo chattr +i ${MINTER_HOME}/.minter/config/config.toml
-test -f ${MINTER_HOME}/.minter/config/genesis.json  && sudo chattr +i ${MINTER_HOME}/.minter/config/genesis.json
-test -f ${MINTER_HOME}/.minter/config/node_key.json  && sudo chattr +i ${MINTER_HOME}/.minter/config/node_key.json
-test -f ${MINTER_HOME}/.minter/config/priv_validator.json  && sudo chattr +i ${MINTER_HOME}/.minter/config/priv_validator.json
-test -f ${MINTER_HOME}/.minter  && sudo chattr +i ${MINTER_HOME}/.minter
-
 #
 sudo systemctl start  ${MINTER_SERVICE_NAME}  &>>${LOG_FILE} &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Start Minter service. ${RESULT}"
+
+# Run after start service , after binary create new file struct
+# Lock sensitive files
+test -f ${MINTER_HOME}/minter  && sudo chattr +i ${MINTER_HOME}/minter
+test -f ${MINTER_HOME}/.minter/config/config.toml  && sudo chattr +i ${MINTER_HOME}/.minter/config/config.toml
+test -f ${MINTER_HOME}/.minter/config/genesis.json  && sudo chattr +i ${MINTER_HOME}/.minter/config/genesis.json
+test -f ${MINTER_HOME}/.minter/config/node_key.json  && sudo chattr +i ${MINTER_HOME}/.minter/config/node_key.json
+test -f ${MINTER_HOME}/.minter/config/priv_validator.json  && sudo chattr +i ${MINTER_HOME}/.minter/config/priv_validator.json
+
 
 #Halth check
 #curl http://127.0.0.1:8841/api/status | json_pp &>>${LOG_FILE}
