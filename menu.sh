@@ -73,6 +73,10 @@ show_node_peers(){
   pause
 }
 
+show_iptables_stats(){
+ sudo iptables -L ufw-tendermint -n -v
+ pause
+}
 
 # function to display menus
 show_menus() {
@@ -84,11 +88,12 @@ show_menus() {
   echo "2. Watch minter journal"
   echo "3. Stop Minter"
   echo "4. Restart Minter"
-  echo "5. Update minter"
-  echo "6. Upgrade minter"
+  echo "5. Update minter ***"
+  echo "6. Upgrade minter ***"
   echo "7. Show Node Id"
   echo "8. Show Fail2Ban Stats"
   echo "9. Show Connected Peers"
+  echo "10. Show Tendermint Iptable stats"
   echo "0. Exit"
 }
 # read input from the keyboard and take a action
@@ -97,7 +102,7 @@ show_menus() {
 # Exit when user the user select 3 form the menu option.
 read_options(){
   local choice
-  read -p "Enter choice [ 0 - 9 ] " choice
+  read -p "Enter choice [ 0 - 10 ] " choice
   case $choice in
     1) show_journal ;;
     2) watch_journal ;;
@@ -108,6 +113,7 @@ read_options(){
     7) show_node_id ;;
     8) fail2ban_stats ;;
     9) show_node_peers ;;
+    10) show_iptables_stats ;;
     0) exit 0;;
     *) echo -e "${RED}Error...${STD}" && sleep 2
   esac
