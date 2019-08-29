@@ -4,7 +4,7 @@ Info
 
 Dependencies
 ------------------
-* systemd service name "minter-node"
+* systemd service unit name "minter-node"
 * minter home '/home/minter/' 
 * fail2ban
 * netstat
