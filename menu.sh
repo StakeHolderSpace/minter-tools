@@ -69,7 +69,7 @@ fail2ban_stats(){
 }
 
 show_node_peers(){
-  netstat -alpn | grep 26656
+  netstat -alpn | grep 26656 | grep ESTABLISHED
   pause
 }
 
