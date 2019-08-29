@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# Update is only changing minter binary
+#
 
 BASEDIR=$(dirname "$(readlink -f $0)")
 MINTER_HOME=/home/minter
@@ -51,7 +54,7 @@ RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Stop Minter service. ${RESULT}"
 
 # Remove old address book
-test -f ${MINTER_HOME}/.minter/config/addrbook.json  && rm -f ${MINTER_HOME}/.minter/config/addrbook.json &>>${LOG_FILE}
+# test -f ${MINTER_HOME}/.minter/config/addrbook.json  && rm -f ${MINTER_HOME}/.minter/config/addrbook.json &>>${LOG_FILE}
 
 
 # Backup configs
@@ -64,19 +67,19 @@ RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Backup Minter configs. ${RESULT}"
 
 # Unlock sensitive files
-test -f ${MINTER_HOME}/.minter  && sudo chattr -i ${MINTER_HOME}/.minter
+test -f ${MINTER_HOME}/minter  && sudo chattr -i ${MINTER_HOME}/minter
 
 # Download latest release
 wget --no-check-certificate --content-disposition ${MINTER_GIT_DOWNLOAD}/releases/download/${MINTER_LATEST_V}/${RELIZE_FILE_ZIP} -O ${RELIZE_FILE_ZIP}  &>>${LOG_FILE} &&
 unzip -o  ${RELIZE_FILE_ZIP}  &>>${LOG_FILE} &&
-chmod 755 ${MINTER_HOME}/minter &&
+chmod 744 ${MINTER_HOME}/minter &&
 chown minter:minter ${MINTER_HOME}/minter &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Latest (${MINTER_LATEST_V}) release got. ${RESULT}"
 
 
 # Lock sensitive files
-test -f ${MINTER_HOME}/.minter  && sudo chattr +i ${MINTER_HOME}/.minter
+test -f ${MINTER_HOME}/minter  && sudo chattr +i ${MINTER_HOME}/minter
 
 # test -f ${MINTER_HOME}/${RELIZE_FILE_ZIP} && rm -f ${MINTER_HOME}/${RELIZE_FILE_ZIP} &>>${LOG_FILE}
 

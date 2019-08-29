@@ -1,4 +1,12 @@
 #!/usr/bin/env bash
+#
+# Upgrade :
+#  - Backup configs
+#  - Delete all data (data + tmdata + reset priv_validator_state )
+#  - Update minter binary
+#  - Restore configs
+#
+
 
 BASEDIR=$(dirname "$(readlink -f $0)")
 MINTER_HOME=/home/minter
@@ -41,10 +49,6 @@ echo -e "${MSG}"
 
 touch ${LOG_FILE}
 #
-# journalctl -u ${MINTER_SERVICE_NAME}  -n 100
-# sudo systemctl status  ${MINTER_SERVICE_NAME}
-# sudo systemctl start  ${MINTER_SERVICE_NAME}
-# sudo systemctl restart  ${MINTER_SERVICE_NAME}
 sudo systemctl stop  ${MINTER_SERVICE_NAME} &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Stop Minter service. ${RESULT}"
@@ -52,7 +56,6 @@ RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
 
 # Remove old address book
 test -f ${MINTER_HOME}/.minter/config/addrbook.json  && rm -f ${MINTER_HOME}/.minter/config/addrbook.json &>>${LOG_FILE}
-
 
 # Backup configs
 echo -e "
@@ -78,22 +81,25 @@ RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Backup Minter configs. ${RESULT}"
 
 # Unlock sensitive files
-test -f ${MINTER_HOME}/.minter  && sudo chattr -i ${MINTER_HOME}/.minter
+test -f ${MINTER_HOME}/minter  && sudo chattr -i ${MINTER_HOME}/minter
 test -f ${MINTER_HOME}/.minter/config/config.toml  && sudo chattr -i ${MINTER_HOME}/.minter/config/config.toml
 test -f ${MINTER_HOME}/.minter/config/genesis.json  && sudo chattr -i ${MINTER_HOME}/.minter/config/genesis.json
 test -f ${MINTER_HOME}/.minter/config/node_key.json  && sudo chattr -i ${MINTER_HOME}/.minter/config/node_key.json
 test -f ${MINTER_HOME}/.minter/config/priv_validator.json  && sudo chattr -i ${MINTER_HOME}/.minter/config/priv_validator.json
 
 # Old minter data delete.
-test -d ${MINTER_HOME}/.minter  && rm -rf ${MINTER_HOME}/.minter/ &>>${LOG_FILE} &&
+test -d ${MINTER_HOME}/.minter/data  && rm -rf ${MINTER_HOME}/.minter/data/ &>>${LOG_FILE} &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Old minter data delete. ${RESULT}"
+test -d ${MINTER_HOME}/.minter/tmdata  && rm -rf ${MINTER_HOME}/.minter/tmdata/ &>>${LOG_FILE} &&
+RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
+        echo -e "${YELLOW}Old minter tmdata delete. ${RESULT}"
 
 
 # Download latest release
 wget --no-check-certificate --content-disposition ${MINTER_GIT_DOWNLOAD}/releases/download/${MINTER_LATEST_V}/${RELIZE_FILE_ZIP} -O ${RELIZE_FILE_ZIP}  &>>${LOG_FILE} &&
 unzip -o  ${RELIZE_FILE_ZIP}  &>>${LOG_FILE} &&
-chmod 755 ${MINTER_HOME}/minter &&
+chmod 744 ${MINTER_HOME}/minter &&
 chown minter:minter ${MINTER_HOME}/minter &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Latest (${MINTER_LATEST_V}) release got. ${RESULT}"
