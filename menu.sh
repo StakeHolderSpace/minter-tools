@@ -44,7 +44,10 @@ show_node_id(){
 }
 
 update_minter(){
-  sudo chmod +x ${SCRIPTS_DIR}/minter-update && sudo ${SCRIPTS_DIR}/minter-update && sudo chmod -x ${SCRIPTS_DIR}/minter-update
+  sudo chmod +x ${SCRIPTS_DIR}/minter-update &&
+  sudo ${SCRIPTS_DIR}/minter-update &&
+  sudo chmod -x ${SCRIPTS_DIR}/minter-update
+
   sleep 3
 
   sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 200 | grep "software-version="
@@ -53,7 +56,10 @@ update_minter(){
 }
 
 upgrade_minter(){
-  sudo chmod +x ${SCRIPTS_DIR}/minter-upgrade && sudo ${SCRIPTS_DIR}/minter-upgrade && sudo chmod -x ${SCRIPTS_DIR}/minter-upgrade
+  sudo chmod +x ${SCRIPTS_DIR}/minter-upgrade &&
+  sudo ${SCRIPTS_DIR}/minter-upgrade &&
+  sudo chmod -x   ${SCRIPTS_DIR}/minter-upgrade
+
   pause
 }
 

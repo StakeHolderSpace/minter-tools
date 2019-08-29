@@ -69,7 +69,8 @@ read -r -d '' ZERO_STATE <<-EOM
 }
 EOM
 
-echo  "$ZERO_STATE" > ${MINTER_HOME}/.minter/config/priv_validator_state.json
+test -f ${MINTER_HOME}/.minter/config/priv_validator_state.json &&
+  echo  "$ZERO_STATE" > ${MINTER_HOME}/.minter/config/priv_validator_state.json
 
 
 tar -czf  ${MINTER_HOME}/${DT_STAMP}_minter_bcp.tar.gz -T /tmp/minter_bcp.list &>>${LOG_FILE} &&
