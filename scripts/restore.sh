@@ -23,9 +23,14 @@ BACKUP_MINTER_DATA=${BACKUP_SSH_HOST}:${MINTER_HOME}/minter_backups/
 #
 sudo systemctl stop  ${MINTER_SERVICE_NAME}  &&
 rsync -chavzP -e "ssh -p ${BACKUP_SSH_PORT}" ${BACKUP_MINTER_DATA}/data/ ${MINTER_DATA}/data/&&
-rsync -chavzP -e "ssh -p ${BACKUP_SSH_PORT}" ${BACKUP_MINTER_DATA}/tmdata/  ${MINTER_DATA}/tmdata/
+rsync -chavzP -e "ssh -p ${BACKUP_SSH_PORT}" ${BACKUP_MINTER_DATA}/tmdata/  ${MINTER_DATA}/tmdata/ &&
+chown -R minter:minter ${MINTER_DATA}
 #
+echo "###########################################################################"
+echo ""
 echo "Do shell command if need: 'sudo systemctl restart  ${MINTER_SERVICE_NAME}'"
+echo ""
+echo "###########################################################################"
 #
 [[ "$DEBUG" == "true" ]] && echo "====== Restore finished ====="
 
