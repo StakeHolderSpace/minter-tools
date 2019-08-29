@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
+#
+# Backup script for minter node
+#
 
 DEBUG=false
 MINTER_HOME=/home/minter
+MINTER_SERVICE_NAME=minter-node
 MINTER_DATA=${MINTER_HOME}/.minter
 BACKUP_ROOT=${MINTER_HOME}/minter_backup
 MINTER_HAS_ERRORS=true
 
 # 0 code - errors not found!
-sudo journalctl -u minter-node  -n 1000 | grep panic > /dev/null
+sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 1000 | grep panic > /dev/null
 
 [[ $? -eq 0 ]] && MINTER_HAS_ERRORS=false
 
@@ -20,10 +24,10 @@ if  [[ "$MINTER_HAS_ERRORS" == "false" ]]; then
   #
   [[ -d  ${BACKUP_ROOT}/config/ ]] && rm -rf ${BACKUP_ROOT}/config/
   #
-  sudo systemctl stop  minter-node &&
+  sudo systemctl stop  ${MINTER_SERVICE_NAME} &&
   rsync -av --delete ${MINTER_DATA}/ ${BACKUP_ROOT}/ &&
   rm -rf ${BACKUP_ROOT}/config/ &&
-  sudo systemctl start  minter-node
+  sudo systemctl start  ${MINTER_SERVICE_NAME}
   #
   [[ "$DEBUG" == "true" ]] && echo "=========== Backup finished ====="
 

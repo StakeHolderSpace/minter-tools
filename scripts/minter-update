@@ -2,6 +2,7 @@
 
 BASEDIR=$(dirname "$(readlink -f $0)")
 MINTER_HOME=/home/minter
+MINTER_SERVICE_NAME=minter-node
 MINTER_GIT_REPO=https://api.github.com/repos/MinterTeam/minter-go-node
 MINTER_GIT_DOWNLOAD=https://github.com/MinterTeam/minter-go-node
 MINTER_LATEST_V=$(curl --silent "${MINTER_GIT_REPO}/releases/latest" | grep -Po '"tag_name": "\K.*?(?=")')
@@ -31,7 +32,7 @@ fi
 read -r -d '' MSG <<-EOM
 ${BLUE}#########################################################${NOCOLOR}
 
-                ${YELLOW} Started minter-node Update ${NOCOLOR}
+                ${YELLOW} Started ${MINTER_SERVICE_NAME} Update ${NOCOLOR}
 
 ${BLUE}#########################################################${NOCOLOR}
 EOM
@@ -40,12 +41,12 @@ echo -e "${MSG}"
 
 touch ${LOG_FILE}
 #
-# journalctl -u minter-node  -n 100
-# sudo systemctl status  minter-node
-# sudo systemctl start  minter-node
-# sudo systemctl restart  minter-node
+# journalctl -u ${MINTER_SERVICE_NAME}  -n 100
+# sudo systemctl status  ${MINTER_SERVICE_NAME}
+# sudo systemctl start  ${MINTER_SERVICE_NAME}
+# sudo systemctl restart  ${MINTER_SERVICE_NAME}
 
-sudo systemctl stop  minter-node &&
+sudo systemctl stop  ${MINTER_SERVICE_NAME} &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Stop Minter service. ${RESULT}"
 
@@ -81,7 +82,7 @@ test -f ${MINTER_HOME}/.minter  && sudo chattr +i ${MINTER_HOME}/.minter
 
 
 #
-sudo systemctl start  minter-node  &>>${LOG_FILE} &&
+sudo systemctl start  ${MINTER_SERVICE_NAME}  &>>${LOG_FILE} &&
 RESULT="${GREEN}[DONE] ${NOCOLOR}" || RESULT="${RED}[FAILED] ${NOCOLOR}"
         echo -e "${YELLOW}Start Minter service. ${RESULT}"
 

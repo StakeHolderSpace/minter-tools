@@ -6,6 +6,8 @@
 BASEDIR=$(dirname "$(readlink -f $0)")
 SCRIPTS_DIR=${BASEDIR}/scripts
 MINTER_HOME=/home/minter
+MINTER_SERVICE_NAME=minter-node
+
 RED='\033[0;41;30m'
 STD='\033[0;0;39m'
 
@@ -17,22 +19,22 @@ pause(){
 }
 
 watch_journal(){
-  sudo journalctl -u minter-node  -n 100 -f
+  sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 100 -f
   pause
 }
 
 show_journal(){
-  sudo journalctl -u minter-node  -n 300
+  sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 300
   pause
 }
 
 stop_minter(){
-  sudo systemctl stop  minter-node
+  sudo systemctl stop  ${MINTER_SERVICE_NAME}
   pause
 }
 
 restart_minter(){
-  sudo systemctl restart  minter-node
+  sudo systemctl restart  ${MINTER_SERVICE_NAME}
   pause
 }
 
@@ -45,7 +47,7 @@ update_minter(){
   sudo chmod +x ${SCRIPTS_DIR}/minter-update && sudo ${SCRIPTS_DIR}/minter-update && sudo chmod -x ${SCRIPTS_DIR}/minter-update
   sleep 3
 
-  sudo journalctl -u minter-node  -n 200 | grep "software-version="
+  sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 200 | grep "software-version="
 
   pause
 }

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-
+#
+# Script for experemental node which keep state changes in json files
+#
 MINTER_HOME=/home/minter
 HISTORY_ROOT=${MINTER_HOME}/.minter/changes
 HISTORY_DEPTH=240000
