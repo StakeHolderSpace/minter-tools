@@ -8,7 +8,7 @@ HOSTNAME=`hostname`
 MINTER_HOME=/home/minter
 MINTER_SERVICE_NAME=minter-node
 MINTER_DATA=${MINTER_HOME}/.minter
-BACKUP_ROOT=${MINTER_HOME}/minter_backup/${HOSTNAME}
+BACKUP_ROOT=${MINTER_HOME}/minter_backups
 MINTER_HAS_ERRORS=true
 
 # 0 code - errors not found!

@@ -12,7 +12,7 @@ MINTER_HOME=/home/minter
 MINTER_SERVICE_NAME=minter-node
 MINTER_DATA=${MINTER_HOME}/.minter
 
-BACKUP_MINTER_DATA=${BACKUP_SSH_HOST}:${MINTER_HOME}/minter_backups/
+BACKUP_MINTER_DATA=${BACKUP_SSH_HOST}:${MINTER_HOME}/minter_backups
 
 
 [[ "$DEBUG" == "true" ]] && echo "====== Restore started ====="
