@@ -11,6 +11,7 @@ MINTER_DATA=${MINTER_HOME}/.minter
 BACKUP_ROOT=${MINTER_HOME}/minter_backups
 MINTER_HAS_ERRORS=false
 
+
 # 0 code - errors not found!
 sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 500 | grep -q panic &&  MINTER_HAS_ERRORS=true
 
