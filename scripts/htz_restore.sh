@@ -8,7 +8,6 @@ DEBUG=false
 BACKUP_SSH_HOST=u00000@u00000.your-backup.de
 BACKUP_SSH_PORT=23
 BACKUP_SSH_PRIVKEY_PATH=~/.ssh/id_rsa_storagebox
-
 BACKUP_MINTER_DATA=${BACKUP_SSH_HOST}:./minter_backups
 
 MINTER_HOME=/home/minter
