@@ -29,7 +29,7 @@ if  [[ "$MINTER_HAS_ERRORS" == "false" ]] && [[ -d  ${MINTER_DATA}/ ]]; then
   [[ "$DEBUG" == "true" ]] && echo "=========== Backup started ====="
   #
   sudo systemctl stop  ${MINTER_SERVICE_NAME} &&
-  rsync -av --delete --progress -e 'ssh -p ${BACKUP_SSH_PORT} -i ${BACKUP_SSH_PRIVKEY_PATH}' --recursive --exclude  'config/' ${MINTER_DATA}/  ${BACKUP_MINTER_DATA}/
+  rsync -av --delete --progress -e "ssh -p ${BACKUP_SSH_PORT} -i ${BACKUP_SSH_PRIVKEY_PATH}" --recursive --exclude  'config/' ${MINTER_DATA}/  ${BACKUP_MINTER_DATA}/
   sudo systemctl start  ${MINTER_SERVICE_NAME}
   #
   [[ "$DEBUG" == "true" ]] && echo "=========== Backup finished ====="
