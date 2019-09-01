@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # Restore script for minter node
+# read  before use: https://wiki.hetzner.de/index.php/Backup_Space_SSH_Keys/ru
 #
 
 DEBUG=false
