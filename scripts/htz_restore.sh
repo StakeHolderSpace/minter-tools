@@ -23,7 +23,7 @@ MINTER_DATA=${MINTER_HOME}/.minter
 
 #
 sudo systemctl stop  ${MINTER_SERVICE_NAME}  &&
-rsync -chavzP --progress -e "ssh -p ${BACKUP_SSH_PORT} -i ${BACKUP_SSH_PRIVKEY_PATH}" --recursive ${BACKUP_MINTER_DATA}/ ${MINTER_DATA}/ &&
+rsync -havzP -e "ssh -p ${BACKUP_SSH_PORT} -i ${BACKUP_SSH_PRIVKEY_PATH}" --progress --delete  --exclude "config/" --recursive ${BACKUP_MINTER_DATA}/ ${MINTER_DATA}/ &&
 chown -R minter:minter ${MINTER_DATA}
 #
 echo "###########################################################################"
