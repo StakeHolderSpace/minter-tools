@@ -10,32 +10,26 @@ MINTER_HAS_ERRORS=false
 BACKUP_SSH_HOST=u00000@u00000.your-backup.de
 BACKUP_SSH_PORT=23
 BACKUP_SSH_PRIVKEY_PATH=~/.ssh/id_rsa_storagebox
-BACKUP_MINTER_DATA=${BACKUP_SSH_HOST}:./minter_backups
+BACKUP_MINTER_DATA=${BACKUP_SSH_HOST}:./${HOSTNAME}
 
 MINTER_HOME=/home/minter
 MINTER_SERVICE_NAME=minter-node
-MINTER_DATA=${MINTER_HOME}/.minter
+MINTER_CONFIG=${MINTER_HOME}/.minter/config
 
-
-# 0 code - errors not found!
-sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 500 | grep -q panic &&  MINTER_HAS_ERRORS=true
-#
 sudo chmod 0600 ${BACKUP_SSH_PRIVKEY_PATH}
 
-[[ "$DEBUG" == "true" ]] && echo "MINTER_HAS_ERRORS=$MINTER_HAS_ERRORS"
-
 #
-if  [[ "$MINTER_HAS_ERRORS" == "false" ]] && [[ -d  ${MINTER_DATA}/ ]]; then
+if  [[ -d  ${MINTER_CONFIG}/ ]]; then
 
   [[ "$DEBUG" == "true" ]] && echo "=========== Backup started ====="
   #
-  sudo systemctl stop  ${MINTER_SERVICE_NAME} &&
   rsync -av -e "ssh -p ${BACKUP_SSH_PORT} -i ${BACKUP_SSH_PRIVKEY_PATH}" \
-    --progress --delete --recursive \
-    --exclude  'config/'
-   ${MINTER_DATA}/  ${BACKUP_MINTER_DATA}/
-
-  sudo systemctl start  ${MINTER_SERVICE_NAME}
+    --progress  --delete \
+    --include "config.toml" \
+    --include "node_key.json" \
+    --include "priv_validator.json" \
+    --exclude="*" \
+    ${MINTER_CONFIG}/  ${BACKUP_MINTER_DATA}/
   #
   [[ "$DEBUG" == "true" ]] && echo "=========== Backup finished ====="
 
