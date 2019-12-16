@@ -9,7 +9,8 @@ DEBUG=false
 BACKUP_SSH_HOST=u00000@u00000.your-backup.de
 BACKUP_SSH_PORT=23
 BACKUP_SSH_PRIVKEY_PATH=~/.ssh/id_rsa_storagebox
-BACKUP_MINTER_DATA=${BACKUP_SSH_HOST}:./minter_backups
+BACKUP_SSH_REMOTE_DIR=./minter_backups
+BACKUP_SSH_REMOTE_PATH=${BACKUP_SSH_HOST}:${BACKUP_SSH_REMOTE_DIR}
 
 MINTER_HOME=/home/minter
 MINTER_SERVICE_NAME=minter-node
@@ -26,8 +27,9 @@ sudo systemctl stop  ${MINTER_SERVICE_NAME}  &&
 rsync -havzP -e "ssh -p ${BACKUP_SSH_PORT} -i ${BACKUP_SSH_PRIVKEY_PATH}" \
   --progress --recursive --delete  \
   --exclude "config/" \
-  ${BACKUP_MINTER_DATA}/ ${MINTER_DATA}/ &&
+  ${BACKUP_SSH_REMOTE_PATH}/ ${MINTER_DATA}/ &&
 chown -R minter:minter ${MINTER_DATA}
+
 #
 echo "###########################################################################"
 echo ""

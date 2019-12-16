@@ -10,7 +10,9 @@ MINTER_HAS_ERRORS=false
 BACKUP_SSH_HOST=u00000@u00000.your-backup.de
 BACKUP_SSH_PORT=23
 BACKUP_SSH_PRIVKEY_PATH=~/.ssh/id_rsa_storagebox
-BACKUP_MINTER_DATA=${BACKUP_SSH_HOST}:./minter_backups
+BACKUP_SSH_REMOTE_DIR=./minter_backups
+BACKUP_SSH_REMOTE_PATH=${BACKUP_SSH_HOST}:${BACKUP_SSH_REMOTE_DIR}
+
 
 MINTER_HOME=/home/minter
 MINTER_SERVICE_NAME=minter-node
@@ -32,8 +34,8 @@ if  [[ "$MINTER_HAS_ERRORS" == "false" ]] && [[ -d  ${MINTER_DATA}/ ]]; then
   sudo systemctl stop  ${MINTER_SERVICE_NAME} &&
   rsync -av -e "ssh -p ${BACKUP_SSH_PORT} -i ${BACKUP_SSH_PRIVKEY_PATH}" \
     --progress --delete --recursive \
-    --exclude  'config/'
-   ${MINTER_DATA}/  ${BACKUP_MINTER_DATA}/
+    --exclude  'config/' \
+    ${MINTER_DATA}/  ${BACKUP_SSH_REMOTE_PATH}/
 
   sudo systemctl start  ${MINTER_SERVICE_NAME}
   #

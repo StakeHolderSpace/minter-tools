@@ -10,7 +10,9 @@ MINTER_HAS_ERRORS=false
 BACKUP_SSH_HOST=u00000@u00000.your-backup.de
 BACKUP_SSH_PORT=23
 BACKUP_SSH_PRIVKEY_PATH=~/.ssh/id_rsa_storagebox
-BACKUP_MINTER_DATA=${BACKUP_SSH_HOST}:./${HOSTNAME}
+BACKUP_SSH_REMOTE_DIR=./${HOSTNAME}
+BACKUP_SSH_REMOTE_PATH=${BACKUP_SSH_HOST}:${BACKUP_SSH_REMOTE_DIR}
+
 
 MINTER_HOME=/home/minter
 MINTER_SERVICE_NAME=minter-node
@@ -29,7 +31,7 @@ if  [[ -d  ${MINTER_CONFIG}/ ]]; then
     --include "node_key.json" \
     --include "priv_validator.json" \
     --exclude="*" \
-    ${MINTER_CONFIG}/  ${BACKUP_MINTER_DATA}/
+    ${MINTER_CONFIG}/  ${BACKUP_SSH_REMOTE_PATH}/
   #
   [[ "$DEBUG" == "true" ]] && echo "=========== Backup finished ====="
 
