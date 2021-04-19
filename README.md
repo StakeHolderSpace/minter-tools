@@ -21,16 +21,14 @@ sudo ./minter-tools/menu.sh
  M A I N - M E N U
 ~~~~~~~~~~~~~~~~~~~~~
 1. Show minter journal
-2. Watch minter journal
-3. Stop Minter
-4. Restart Minter
-5. Update minter
-6. Upgrade minter
-7. Show Node Id
-8. Show Fail2Ban Stats
-9. Show Connected Peers
+2. Stop Minter
+3. Restart Minter
+4. Show Node Id
+5. Show Fail2Ban Stats
+6. Show Connected Peers
+7. Show P2P stats
 0. Exit
-Enter choice [ 0 - 9 ] 0
+Enter choice [ 0 - 7 ] 0
 
 ```
 

@@ -93,7 +93,7 @@ show_menus() {
 # Exit when user the user select 3 form the menu option.
 read_options(){
   local choice
-  read -p "Enter choice [ 0 - 10 ] " choice
+  read -p "Enter choice [ 0 - 7 ] " choice
   case $choice in
     1) show_journal ;;
     2) stop_minter ;;
