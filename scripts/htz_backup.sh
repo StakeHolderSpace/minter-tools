@@ -33,8 +33,8 @@ if  [[ "$MINTER_HAS_ERRORS" == "false" ]] && [[ -d  ${MINTER_DATA}/ ]]; then
   #
   sudo systemctl stop  ${MINTER_SERVICE_NAME} &&
   rsync -av -e "ssh -p ${BACKUP_SSH_PORT} -i ${BACKUP_SSH_PRIVKEY_PATH}" \
-    --progress --delete --recursive \
-    --exclude  'config/' \
+    --progress --recursive  --inplace --partial --delete \
+    --exclude  'config/' --exclude  '*.sock' \
     ${MINTER_DATA}/  ${BACKUP_SSH_REMOTE_PATH}/
 
   sudo systemctl start  ${MINTER_SERVICE_NAME}

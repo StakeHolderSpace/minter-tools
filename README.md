@@ -33,3 +33,10 @@ sudo ./minter-tools/menu.sh
 Enter choice [ 0 - 9 ] 0
 
 ```
+
+Notes
+--------------
+
+* Для того чтобы можно было управлять пирами и сидами через tendermint rpc , нужно в конфиге ноды выставить флаг "rpc.unsafe = true"
+* ендпоинт \deal_peers не добавляет в адрес бук пиры которые в конфиге помечены как приватные ! [link](https://github
+.com/tendermint/tendermint/blob/14e04f76067e519b8281b013b1037a6e46935123/p2p/switch.go#L471)

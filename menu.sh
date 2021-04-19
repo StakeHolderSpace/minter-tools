@@ -18,11 +18,6 @@ pause(){
   read -p "Press [Enter] key to continue..." pressedKey
 }
 
-watch_journal(){
-  sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 100 -f
-  pause
-}
-
 show_journal(){
   sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 300
   pause
@@ -39,29 +34,10 @@ restart_minter(){
 }
 
 show_node_id(){
-  ${MINTER_HOME}/minter show_node_id
+  ${MINTER_HOME}/bin/minter show_node_id
   pause
 }
 
-update_minter(){
-  sudo chmod +x ${SCRIPTS_DIR}/minter-update &&
-  sudo ${SCRIPTS_DIR}/minter-update &&
-  sudo chmod -x ${SCRIPTS_DIR}/minter-update
-
-  sleep 3
-
-  sudo journalctl -u ${MINTER_SERVICE_NAME}  -n 200 | grep "software-version="
-
-  pause
-}
-
-upgrade_minter(){
-  sudo chmod +x ${SCRIPTS_DIR}/minter-upgrade &&
-  sudo ${SCRIPTS_DIR}/minter-upgrade &&
-  sudo chmod -x   ${SCRIPTS_DIR}/minter-upgrade
-
-  pause
-}
 
 fail2ban_stats(){
   fail2ban-client status | sed -n 's/,//g;s/.*Jail list://p' | xargs -n1 fail2ban-client status
@@ -69,12 +45,30 @@ fail2ban_stats(){
 }
 
 show_node_peers(){
-  netstat -alpn | grep 26656 | grep ESTABLISHED
+  #netstat -alpn | grep "/minter" | grep ESTABLISHED
+
+  curl -s 'http://localhost:26657/net_info' | \
+  python3 -c "import sys, json;
+  peers = [];
+  peers_info = json.load(sys.stdin)
+  for peer in peers_info['result']['peers']:
+    node_info = peer['node_info']
+    remote_ip = peer['remote_ip']
+    id = node_info['id']
+    moniker = node_info['moniker']
+    listen_addr = node_info['listen_addr']
+    p2p_port = listen_addr.split(':')[-1]
+    peers.append('%s@%s:%s # %s' % (id, remote_ip, p2p_port, moniker))
+
+  print('\n\r'.join('{0}'.format(w) for w in peers))
+  print('='*50)
+  print(len(peers))
+  "
   pause
 }
 
 show_iptables_stats(){
- sudo iptables -L ufw-tendermint -n -v
+ sudo iptables -L ufw-minter-p2p -n -v
  pause
 }
 
@@ -85,15 +79,12 @@ show_menus() {
   echo " M A I N - M E N U"
   echo "~~~~~~~~~~~~~~~~~~~~~"
   echo "1. Show minter journal"
-  echo "2. Watch minter journal"
-  echo "3. Stop Minter"
-  echo "4. Restart Minter"
-  echo "5. Update minter ***"
-  echo "6. Upgrade minter ***"
-  echo "7. Show Node Id"
-  echo "8. Show Fail2Ban Stats"
-  echo "9. Show Connected Peers"
-  echo "10. Show Tendermint Iptable stats"
+  echo "2. Stop Minter"
+  echo "3. Restart Minter"
+  echo "4. Show Node Id"
+  echo "5. Show Fail2Ban Stats"
+  echo "6. Show Connected Peers"
+  echo "7. Show P2P stats"
   echo "0. Exit"
 }
 # read input from the keyboard and take a action
@@ -105,15 +96,12 @@ read_options(){
   read -p "Enter choice [ 0 - 10 ] " choice
   case $choice in
     1) show_journal ;;
-    2) watch_journal ;;
-    3) stop_minter ;;
-    4) restart_minter ;;
-    5) update_minter ;;
-    6) upgrade_minter ;;
-    7) show_node_id ;;
-    8) fail2ban_stats ;;
-    9) show_node_peers ;;
-    10) show_iptables_stats ;;
+    2) stop_minter ;;
+    3) restart_minter ;;
+    4) show_node_id ;;
+    5) fail2ban_stats ;;
+    6) show_node_peers ;;
+    7) show_iptables_stats ;;
     0) exit 0;;
     *) echo -e "${RED}Error...${STD}" && sleep 2
   esac
